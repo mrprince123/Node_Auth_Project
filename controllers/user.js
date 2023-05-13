@@ -13,11 +13,6 @@ export const register = async (req, res, next) => {
         let user = await User.findOne({ email });
 
         if (user) {
-            // return res.status(404).json({
-            //     success: false,
-            //     message: "User already exists"
-            // });
-
             return next(new ErrorHandler("User already Exists", 404));
         }
 
@@ -40,11 +35,6 @@ export const login = async (req, res, next) => {
         const user = await User.findOne({ email }).select("+password");
 
         if (!user) {
-            // return res.status(404).json({
-            //     success: false,
-            //     message: "Invalid email or Password"
-            // });
-
             return next(new ErrorHandler("Invalid email or Password", 404));
         }
 
