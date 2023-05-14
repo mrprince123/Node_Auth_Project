@@ -11,8 +11,8 @@ export const errorMiddleware = (err, req, res, next) => {
 
     err.statusCode = err.statusCode || 500;
 
-    return res.status(404).json({
-        success: err.statusCode,
+    return res.status(err.statusCode).json({
+        success: false,
         message: err.message,
     });
 }

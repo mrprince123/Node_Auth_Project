@@ -47,7 +47,7 @@ export const getMyTask = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 
 export const updateMyTask = async (req, res, next) => {

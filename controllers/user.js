@@ -1,5 +1,4 @@
 import User from "../models/User.js";
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { sendToken } from "../utils/features.js";
 import ErrorHandler from "../middleware/error.js";
@@ -13,7 +12,7 @@ export const register = async (req, res, next) => {
         let user = await User.findOne({ email });
 
         if (user) {
-            return next(new ErrorHandler("User already Exists", 404));
+            return next(new ErrorHandler("User already Exists", 400));
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -35,16 +34,13 @@ export const login = async (req, res, next) => {
         const user = await User.findOne({ email }).select("+password");
 
         if (!user) {
-            return next(new ErrorHandler("Invalid email or Password", 404));
+            return next(new ErrorHandler("Invalid email or Password", 400));
         }
 
         const isMatch = await bcrypt.compare(password, user.password)
 
         if (!isMatch) {
-            return res.status(404).json({
-                success: false,
-                message: "Invalid email or Password"
-            });
+            return next(new ErrorHandler("Invalid Email or Password", 400));
         }
 
         sendToken(user, res, `Welcome back ${user.name}`, 200);
@@ -54,7 +50,7 @@ export const login = async (req, res, next) => {
 };
 
 
-export const getMyProfile = async (req, res) => {
+export const getMyProfile = (req, res) => {
 
     res.status(200).json({
         success: true,
